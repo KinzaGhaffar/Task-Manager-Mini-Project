@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="jumbotron p-3">
+                <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal">Add New Task</button>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-dark">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Task</th>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in tasks %}
+                            <tr>
+                                <td>{{row.id}}</td>
+                                <td>{{row.task}}</td>
+                                <td>{{row.description}}</td>
+                                {% if row.duedate %}
+                                    <td>{{ row.duedate.split(' ')[0] }}</td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+                                <td>
+                                    {% if row.priority %}
+                                        {% set priority_class = '' %}
+                                        {% if row.priority == 'high' %}
+                                            {% set priority_class = 'badge-danger' %}
+                                        {% elif row.priority == 'medium' %}
+                                            {% set priority_class = 'badge-success' %}
+                                        {% elif row.priority == 'low' %}
+                                            {% set priority_class = 'badge-warning' %}
+                                        {% endif %}
+                                        <span class="badge {{ priority_class }}">{{ row.priority }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if row.status %}
+                                        {% set status_class = '' %}
+                                        {% if row.status == 'pending' %}
+                                            {% set status_class = 'badge-warning' %}
+                                        {% elif row.status == 'completed' %}
+                                            {% set status_class = 'badge-success' %}
+                                        {% elif row.status == 'in progress' %}
+                                            {% set status_class = 'badge-primary' %}
+                                        {% endif %}
+                                        <span class="badge {{ status_class }}">{{ row.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="/update/{{row.id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.id}}">Edit</a>
+                                    <a href="/delete/{{row.id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure to Delete this task?')">Delete</a>
+                                </td>
+                            </tr>
+
+                            <!-- ------------------ Edit Task Modal ------------------ -->
+                            <div id="modaledit{{row.id}}" class="modal fade" role="dialog">
+                                <!-- ... your existing modal code ... -->
+                            </div>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ------------------ Add Task Modal ------------------ -->
+            <div id="mymodal" class="modal fade" role="dialog">
+                <!-- ... your existing modal code ... -->
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
