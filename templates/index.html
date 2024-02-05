@@ -1,86 +1,200 @@
 {% extends 'base.html' %}
 {% include 'header.html' %}
 
+
 {% block title %} Home {% endblock %}
+
+
 
 {% block body %}
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col md-12">
             <div class="jumbotron p-3">
                 <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal">Add New Task</button>
 
-                <div class="table-responsive">
-                    <table class="table table-hover table-dark">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Task</th>
-                                <th>Description</th>
-                                <th>Due Date</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in tasks %}
-                            <tr>
-                                <td>{{row.id}}</td>
-                                <td>{{row.task}}</td>
-                                <td>{{row.description}}</td>
-                                {% if row.duedate %}
-                                    <td>{{ row.duedate.split(' ')[0] }}</td>
-                                {% else %}
-                                    <td></td>
-                                {% endif %}
-                                <td>
-                                    {% if row.priority %}
-                                        {% set priority_class = '' %}
-                                        {% if row.priority == 'high' %}
-                                            {% set priority_class = 'badge-danger' %}
-                                        {% elif row.priority == 'medium' %}
-                                            {% set priority_class = 'badge-success' %}
-                                        {% elif row.priority == 'low' %}
-                                            {% set priority_class = 'badge-warning' %}
-                                        {% endif %}
-                                        <span class="badge {{ priority_class }}">{{ row.priority }}</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if row.status %}
-                                        {% set status_class = '' %}
-                                        {% if row.status == 'pending' %}
-                                            {% set status_class = 'badge-warning' %}
-                                        {% elif row.status == 'completed' %}
-                                            {% set status_class = 'badge-success' %}
-                                        {% elif row.status == 'in progress' %}
-                                            {% set status_class = 'badge-primary' %}
-                                        {% endif %}
-                                        <span class="badge {{ status_class }}">{{ row.status }}</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <a href="/update/{{row.id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.id}}">Edit</a>
-                                    <a href="/delete/{{row.id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure to Delete this task?')">Delete</a>
-                                </td>
-                            </tr>
 
-                            <!-- ------------------ Edit Task Modal ------------------ -->
-                            <div id="modaledit{{row.id}}" class="modal fade" role="dialog">
-                                <!-- ... your existing modal code ... -->
-                            </div>
+                <table class="table table-hover table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Task</th>
+                        <th>Description</th>
+                        <th>Due Date</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
 
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                    {% for row in tasks %}
+                    <tr>
+                    <td>{{row.id}}</td>
+                    <td>{{row.task}}</td>
+                    <td>{{row.description}}</td>
+                    {% if row.duedate %}
+                        <td>{{ row.duedate.split(' ')[0] }}</td>
+                    {% else %}
+                                <td></td>
+                    {% endif %}
+
+
+
+                    <td>
+                        {% if row.priority %}
+                            {% set priority_class = '' %}
+                            {% if row.priority == 'high' %}
+                                {% set priority_class = 'badge-danger' %}
+                            {% elif row.priority == 'medium' %}
+                                {% set priority_class = 'badge-success' %}
+                            {% elif row.priority == 'low' %}
+                                {% set priority_class = 'badge-warning' %}
+                            {% endif %}
+                            <span class="badge {{ priority_class }}">{{ row.priority }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if row.status %}
+                            {% set status_class = '' %}
+                            {% if row.status == 'pending' %}
+                                {% set status_class = 'badge-warning' %}
+                            {% elif row.status == 'completed' %}
+                                {% set status_class = 'badge-success' %}
+                            {% elif row.status == 'in progress' %}
+                                {% set status_class = 'badge-primary' %}
+                            {% endif %}
+                            <span class="badge {{ status_class }}">{{ row.status }}</span>
+                        {% endif %}
+                    </td>            
+                    
+
+                    <td>
+                        <a href="/update/{{row.id}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.id}}">Edit</a>
+                        <a href="/delete/{{row.id}}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure to Delete this task?')">Delete</a>
+                    </td>
+                </tr>
+
+ 
+<!-- ------------------ Edit Task Modal ------------------ -->
+<div id="modaledit{{row.id}}" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"> Update Task Information</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('update')}}" method="POST">
+
+                    <div class="form-group">
+                        <label>Task:</label>
+                        <input type="hidden" name="id" value="{{row.id}}">
+                        <input type="text" class="form-control" name="task" value="{{row.task}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input type="text" class="form-control" name="description" value="{{row.description}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Due Date:</label>
+                        <!-- Use value attribute to show the current value -->
+                        <input type="date" class="form-control" name="duedate" value="{{row.duedate.split(' ')[0] if row.duedate else ''}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Priority:</label>
+                        <select class="form-control" name="priority" required="1">
+                            <option value="high" {% if row.priority == 'high' %}selected{% endif %}>High</option>
+                            <option value="medium" {% if row.priority == 'medium' %}selected{% endif %}>Medium</option>
+                            <option value="low" {% if row.priority == 'low' %}selected{% endif %}>Low</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <select class="form-control" name="status" required="1">
+                            <option value="pending" {% if row.status == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="completed" {% if row.status == 'completed' %}selected{% endif %}>Completed</option>
+                            <option value="in progress" {% if row.status == 'in progress' %}selected{% endif %}>In Progress</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Update Task</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+            {% endfor %}
+                </table>
             </div>
 
-            <!-- ------------------ Add Task Modal ------------------ -->
+           <!-- ------------------ Add Task Modal ------------------ -->
             <div id="mymodal" class="modal fade" role="dialog">
-                <!-- ... your existing modal code ... -->
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add Task</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('insert')}}" method="POST">
+                               
+                                <div class="form-group">
+                                    <label>Task:</label>
+                                    <input type="text" class="form-control" name="task" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description:</label>
+                                    <input type="text" class="form-control" name="description" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Due Date:</label>
+                                    <input type="date" class="form-control" name="duedate" required="1">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Priority:</label>
+                                    <select class="form-control" name="priority" required="1">
+                                        <option value="high">High</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="low">Low</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Status:</label>
+                                    <select class="form-control" name="status" required="1">
+                                        <option value="pending">Pending</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="in progress">In Progress</option>
+                                    </select>
+                                </div>
+                                
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Add Task</button>
+                                </div>
+
+
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
