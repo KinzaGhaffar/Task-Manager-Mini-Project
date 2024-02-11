@@ -1,0 +1,41 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      
+      - name: Install dependencies
+        run: |
+          pip install Flask
+          pip install Flask-SQLAlchemy
+          pip install Flask-Migrate
+          pip install -r requirements.txt
+          pip install pytest  # Install pytest for running tests
+
+      - name: Run tests
+        run: |
+          pytest
+
+      - name: Build and deploy
+        run: |
+          # Run database migrations
+          flask db init
+          flask db migrate -m "Migrate database"
+          flask db upgrade
+          
+          # Start the Flask application
+          python app.py
