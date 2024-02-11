@@ -29,17 +29,6 @@ jobs:
       - name: Build and deploy
 
         run: |
-          # Update database URI in app.py
-          # sed -i "s|mysql://root:''@localhost/tasklist|mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_NAME|g" app.py
-
-         
-          # Delete existing migrations directory if it exists
-          rm -rf migrations
-      
-          # Run database migrations
-          flask db init
-          flask db migrate -m "Migrate database"
-          flask db upgrade
-          
+                   
           # Start the Flask application
           python app.py
