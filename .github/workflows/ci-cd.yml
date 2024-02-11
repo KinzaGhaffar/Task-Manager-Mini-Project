@@ -28,6 +28,9 @@ jobs:
 
       - name: Build and deploy
         run: |
+          # Delete existing migrations directory if it exists
+          rm -rf migrations
+      
           # Run database migrations
           flask db init
           flask db migrate -m "Migrate database"
