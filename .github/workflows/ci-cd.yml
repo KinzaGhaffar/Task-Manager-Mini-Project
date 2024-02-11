@@ -28,7 +28,6 @@ jobs:
 
       - name: Build and deploy
 
-        run: |
-                   
+        run: |     
           # Start the Flask application
           python app.py
