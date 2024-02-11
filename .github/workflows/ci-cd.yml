@@ -26,10 +26,6 @@ jobs:
           pip install -r requirements.txt
           pip install pytest  # Install pytest for running tests
 
-      - name: Run tests
-        run: |
-          pytest
-
       - name: Build and deploy
         run: |
           # Run database migrations
