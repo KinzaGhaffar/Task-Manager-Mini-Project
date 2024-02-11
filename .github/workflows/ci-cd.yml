@@ -30,7 +30,7 @@ jobs:
 
         run: |
           # Update database URI in app.py
-          sed -i "s|mysql://root:''@localhost/tasklist|mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_NAME|g" app.py
+          # sed -i "s|mysql://root:''@localhost/tasklist|mysql://$DB_USERNAME:$DB_PASSWORD@$DB_HOST/$DB_NAME|g" app.py
 
          
           # Delete existing migrations directory if it exists
