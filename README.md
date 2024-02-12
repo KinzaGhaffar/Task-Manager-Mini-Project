@@ -1,6 +1,6 @@
 # TaskPulse - Mini Project
 ## Project Description
-TaskPulse is a simple web page designed to help users manage their tasks efficiently. The application is built using Flask, a popular web framework in Python, and leverages SQLAlchemy for seamless integration with a MySQL database.
+TaskPulse is a single web page designed to help users manage their tasks efficiently. The application is built using Flask, a popular web framework in Python, and leverages SQLAlchemy for seamless integration with a MySQL database.
 
 ## Technologies Used
 - `Flask:` The web framework used for building the application.
